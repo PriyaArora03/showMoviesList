@@ -4,11 +4,13 @@ import { AppDispatch, RootState } from './store';
 interface ApiState {
   loading: boolean;
   error: string | null;
+  data: any
 }
 
 const initialState: ApiState = {
   loading: false,
   error: null,
+  data: {}
 };
 
 const apiSlice = createSlice({
@@ -16,12 +18,15 @@ const apiSlice = createSlice({
   initialState,
   reducers: {
     setLoading(state, action: PayloadAction<boolean>) {
-      state.loading = action.payload;
+    state.loading = action.payload;
     },
     setError(state, action: PayloadAction<string | null>) {
-      state.error = action.payload;
+    state.error = action.payload;
     },
+    setData (state, action: PayloadAction<any>) {
+        state.data = action.payload;
   },
+}
 });
 
 // Asynchronous action creator for making API calls with token
@@ -38,12 +43,13 @@ export const fetchData = () => async (dispatch: AppDispatch, getState: () => Roo
     });
     const data = await response.json();
     console.log("data is ", data)
+    dispatch(setData(data))
   } catch (error: any) {
     dispatch(setError(error.message));
   }
 };
 
-export const { setLoading, setError } = apiSlice.actions;
+export const { setLoading, setError, setData } = apiSlice.actions;
 
 export default apiSlice.reducer;
 
