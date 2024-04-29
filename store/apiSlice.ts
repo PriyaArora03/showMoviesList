@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from './store'; 
 
 interface ApiState {
@@ -10,7 +10,7 @@ interface ApiState {
 const initialState: ApiState = {
   loading: false,
   error: null,
-  data: {}
+  data: []
 };
 
 const apiSlice = createSlice({
@@ -24,26 +24,31 @@ const apiSlice = createSlice({
     state.error = action.payload;
     },
     setData (state, action: PayloadAction<any>) {
-        state.data = action.payload;
+      console.log('actionpayload', action.payload)
+      console.log("statedata", state.data)
+      
+        state.data = [...state.data, ...action.payload];
+        console.log("statedata after", state.data)
   },
 }
 });
 
 // Asynchronous action creator for making API calls with token
-export const fetchData = () => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const fetchData = (pageNumber: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
   dispatch(setLoading(true));
   const { token } = getState().auth
-  console.log('fetch calling')
+
+  console.log('fetch calling', "token is", token)
   try {
     console.log('try calling')
-    const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1', {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=${pageNumber}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     const data = await response.json();
-    console.log("data is ", data)
-    dispatch(setData(data))
+    dispatch(setData(data.results))
+
   } catch (error: any) {
     dispatch(setError(error.message));
   }
