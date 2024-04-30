@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, Image } from 'react-native';
+import { FlatList, Text, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './../../../store/store';
 import { fetchData } from './../../../store/apiSlice'
@@ -21,10 +21,10 @@ const Movies: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);
 
   const [page, setPage] = useState(1);
-  
-   function isObjectEmpty(obj: {}) { 
-    return Object.keys(obj).length === 0; 
-  } 
+
+  function isObjectEmpty(obj: {}) {
+    return Object.keys(obj).length === 0;
+  }
 
   const responseData: ListItem[] = !isObjectEmpty(data) ? data.map((item: any) => {
     return {
@@ -44,61 +44,70 @@ const Movies: React.FC = () => {
     <View style={styles.flatListContainer}>
       <Image style={styles.imageThumbnail} source={{ uri: item.imageUrl }} />
       <Text style={styles.text}>{item.title}</Text>
-  </View>
+    </View>
   );
 
   const loadNextPage = () => {
-    console.log("page number in loadNextPage",page)
-    setPage(page+1)
+    setPage(page + 1)
   }
 
   return (
-
     <View style={styles.container}>
       <SafeAreaView></SafeAreaView>
-      <FlatList
-      columnWrapperStyle= {{justifyContent: 'space-between'}}
-        data={responseData}
-        renderItem={renderItem}
-        numColumns={2}
-        keyExtractor={(item) => item.id}
-        onEndReachedThreshold={0.5}
-        onEndReached={loadNextPage}
-      />
-      
+      {loading ? (
+        <View style={styles.overlay}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : (
+        <FlatList
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          data={responseData}
+          renderItem={renderItem}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          onEndReachedThreshold={0.5}
+          onEndReached={loadNextPage}
+        />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "white",
-      justifyContent: 'center',
-    },
-    flatListContainer:{
-      backgroundColor: "lightgrey",
-      marginVertical: 10,
-      marginHorizontal: 10,
-      paddingBottom: 32,
-      borderRadius:6,
-      justifyContent: 'center',
-      alignItems: "center", 
-      height: 150,
-      width: "45%"
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: 'center',
+  },
+  flatListContainer: {
+    backgroundColor: "lightgrey",
+    marginVertical: 10,
+    marginHorizontal: 10,
+    paddingBottom: 32,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: "center",
+    height: 150,
+    width: "45%"
+  },
   imageThumbnail: {
     width: "100%",
     height: "90%",
-    borderTopLeftRadius :6,
-    borderTopRightRadius :6
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6
   },
   text: {
     fontSize: 14,
-    paddingTop:2,
+    paddingTop: 2,
     textAlign: 'left',
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
+  },
+  overlay:{
+    flex:1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 

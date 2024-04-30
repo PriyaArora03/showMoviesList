@@ -104,7 +104,6 @@ const Login: React.FC = () => {
         <FlatList
           data={languages}
           renderItem={({ item }) => (
-            console.log("item", item),
             <TouchableOpacity
               onPress={() => {
                 setSelectedLanguage(item.value);

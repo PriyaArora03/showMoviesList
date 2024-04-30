@@ -17,13 +17,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess(state, action: PayloadAction<string>) {
-    console.log("came inside success")
       state.isLoggedIn = true;
       state.token = action.payload;
       state.error = null;
     },
     loginFailure(state, action: PayloadAction<string>) {
-    console.log("came inside failure")
       state.isLoggedIn = false;
       state.token = null;
       state.error = action.payload;
