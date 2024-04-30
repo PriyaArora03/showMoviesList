@@ -1,12 +1,15 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import Login from '../screens/LoginPage/Login';
 import Movies from '../screens/MoviesPage/Movies'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LoginStackNavigatorParamList } from '../../type';
+import { LoginScreenNavigationProp, LoginStackNavigatorParamList } from '../../type';
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { Button } from 'react-native';
+import { logout } from "../../store/authSlice" 
+
 
 const Stack = createNativeStackNavigator<LoginStackNavigatorParamList>();
 
@@ -14,10 +17,17 @@ const Stack = createNativeStackNavigator<LoginStackNavigatorParamList>();
 const AppStack = () => {
   const { t, i18n } = useTranslation()
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const token = useSelector((state: RootState) => state.auth.token);
+  const lang = useSelector((state: RootState) => state.language.language)
 
-  console.log('isLoggedin***********', isLoggedIn)
-  console.log('token***********', token)
+  const dispatch = useDispatch()
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  console.log('in Routes lang is*******', lang)
+
+  const handleLogout = () => { 
+     dispatch(logout())
+     navigation.navigate("Login")
+  }
 
   return (
     <Stack.Navigator>
@@ -26,15 +36,35 @@ const AppStack = () => {
           name="Movies"
           component={Movies}
           options={{
-            title: t("movies")
+            title: t("movies"),
+            headerRight: () => (
+              <Button
+                title="Sign out"
+                onPress={() => handleLogout()}
+              />
+            ),
           }} />
       ) : (
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{
-            headerShown: false
-          }} />
+        <>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false
+            }} />
+          <Stack.Screen
+            name="Movies"
+            component={Movies}
+            options={{
+              title: t("movies"),
+              headerRight: () => (
+                <Button
+                  title="Sign out"
+                  onPress={() => handleLogout()}
+                />
+              ),
+            }} />
+        </>
       )}
     </Stack.Navigator>
   )

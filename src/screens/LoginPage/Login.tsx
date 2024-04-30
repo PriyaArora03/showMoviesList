@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   };
 
   const validatePassword = (password: string) => {
-    return password.length >= 8;
+    return password.length >= 8 ;
   };
 
 
@@ -60,7 +60,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const changeLanguage = (language: string) => {
+  const changeLanguage = (language: string ) => {
     dispatch(setLanguage(language));
   };
 
@@ -75,7 +75,7 @@ const Login: React.FC = () => {
         onChangeText={setEmail}
         testID="emailInput" />
       <TextInput
-        style={{ ...styles.input, marginBottom: 30 }}
+        style={{ ...styles.input, marginBottom: 20 }}
         placeholder={t("password")}
         secureTextEntry
         value={password}
@@ -86,16 +86,6 @@ const Login: React.FC = () => {
         disabled={!validateEmail(email) || !validatePassword(password)}
         onPress={handleLogin}
         testID="loginButton" />
-      {/* <TouchableOpacity
-        style={{ ...styles.languageButton, marginTop: 100 }}
-        onPress={() => changeLanguage('en')}>
-        <Text style={styles.languageButtonText}>{t("english")}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{ ...styles.languageButton, marginTop: 20 }}
-        onPress={() => changeLanguage('ab')}>
-        <Text style={styles.languageButtonText}>{t("arabic")}</Text>
-      </TouchableOpacity> */}
     </View>
       <View style={styles.lang}>
         <Text style={styles.sTitle1}> {t('language')}</Text>
@@ -123,7 +113,10 @@ const Login: React.FC = () => {
         <View style={styles.btns}>
           <TouchableOpacity
             onPress={() => {
-              i18next.changeLanguage(selectedLanguage); // it will change the language through out the app.
+              i18next.changeLanguage(selectedLanguage)
+              changeLanguage(selectedLanguage)
+              console.log("setting language after button press", selectedLanguage)
+              
             }}
             style={{
               width: 150,
@@ -158,7 +151,7 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontSize: 24,
-    paddingBottom: 30,
+    paddingBottom: 20,
     fontFamily: 'bold',
     color: 'black'
   },
@@ -190,7 +183,7 @@ const styles = StyleSheet.create({
     width: '90%',
     marginHorizontal: "5%",
     backgroundColor: '#FFFFFF',
-    marginBottom:20,
+    marginBottom:10,
     borderWidth: 1,
     borderColor: '#E9EDF2',
     borderRadius: 16,

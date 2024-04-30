@@ -9,7 +9,7 @@ import apiReducer from './apiSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['auth'], // reducers to persist
+  whitelist: ['auth', 'language'], // reducers to persist
 };
 
  const rootReducer = combineReducers({
