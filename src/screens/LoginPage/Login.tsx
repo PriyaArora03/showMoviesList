@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { loginSuccess, loginFailure } from './../../../store/authSlice';
 import { useNavigation } from '@react-navigation/native';
-import Movies from '../MoviesPage/Movies';
+import { useTranslation } from 'react-i18next'
 import { LoginScreenNavigationProp } from '../../../type';
+import { setLanguage } from '../../../store/languageSlice';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [enable, setEnable] = useState<boolean>(false)
   const dispatch = useDispatch();
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
-
+  const { t, i18n } = useTranslation()
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,29 +51,53 @@ const Login: React.FC = () => {
     }
   };
 
+  const changeLanguage = (language: string) => {
+    dispatch(setLanguage(language));
+  };
+
+
   return (
     <View style={styles.container}>
+      <Text style={styles.loginText}>{t("login")}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder={t("email")}
         value={email}
         onChangeText={setEmail}
         testID="emailInput"
       />
       <TextInput
-        style={styles.input}
-        placeholder="Password"
+        style={{ ...styles.input, marginBottom: 30 }}
+        placeholder={t("password")}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
         testID="passwordInput"
       />
       <Button
-        title="Login"
-        disabled={!email || !password}
+        title={t("login")}
+        disabled={!validateEmail(email) || !validatePassword(password)}
         onPress={handleLogin}
         testID="loginButton" />
+      {/* <TouchableOpacity
+        style={styles.languageButton}
+        onPress={handleLogin}
+        disabled={!validateEmail(email) || !validatePassword(password)}>
+        <Text style={styles.languageButtonText}>{t("login")}</Text>
+      </TouchableOpacity> */}
+
+      <TouchableOpacity
+        style={{...styles.languageButton,  marginTop: 100}}
+        onPress={() => changeLanguage('en')}  >
+        <Text style={styles.languageButtonText}>{t("english")}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{...styles.languageButton,  marginTop: 20}}
+        onPress={() => changeLanguage('ab')}  >
+        <Text style={styles.languageButtonText}>{t("arabic")}</Text>
+      </TouchableOpacity>
     </View>
+
   );
 };
 
@@ -81,17 +107,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: "white"
+  },
+  loginText: {
+    fontSize: 24,
+    paddingBottom: 30,
+    fontFamily: 'bold',
+    color: 'black'
   },
   input: {
     width: '100%',
     marginVertical: 10,
     padding: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 10,
   },
   button: {
-    backgroundColor: 'grey'
+    backgroundColor: 'grey',
+  },
+  languageButton: {
+    backgroundColor: '#24A0ED',
+    width: 100,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  languageButtonText: {
+    textAlign: "center",
+    fontSize: 16,
+    fontFamily: 'bold',
+    color: 'white',
   }
 });
 

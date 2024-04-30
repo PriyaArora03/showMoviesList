@@ -8,8 +8,9 @@
 import React from 'react';
 import { Routes } from './src/routes/Routes';
 import { Provider } from 'react-redux';
-import store from './store/store';
+import store from './store/store'
 
+import "./translations/i18n"
 
 function App(): JSX.Element {
 
