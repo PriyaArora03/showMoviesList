@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { loginSuccess, loginFailure } from './../../../store/authSlice';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { LoginScreenNavigationProp } from '../../../type';
 import { setLanguage } from '../../../store/languageSlice';
+import i18next from 'i18next';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -15,6 +16,14 @@ const Login: React.FC = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
   const { t, i18n } = useTranslation()
+
+  const languages = [
+    { label: t("english"), value: 'en' },
+    { label: t("arabic"), value: 'ab' },
+  ];
+
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
+
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,47 +66,86 @@ const Login: React.FC = () => {
 
 
   return (
-    <View style={styles.container}>
+    <><View style={styles.container}>
       <Text style={styles.loginText}>{t("login")}</Text>
       <TextInput
         style={styles.input}
         placeholder={t("email")}
         value={email}
         onChangeText={setEmail}
-        testID="emailInput"
-      />
+        testID="emailInput" />
       <TextInput
         style={{ ...styles.input, marginBottom: 30 }}
         placeholder={t("password")}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
-        testID="passwordInput"
-      />
+        testID="passwordInput" />
       <Button
         title={t("login")}
         disabled={!validateEmail(email) || !validatePassword(password)}
         onPress={handleLogin}
         testID="loginButton" />
       {/* <TouchableOpacity
-        style={styles.languageButton}
-        onPress={handleLogin}
-        disabled={!validateEmail(email) || !validatePassword(password)}>
-        <Text style={styles.languageButtonText}>{t("login")}</Text>
-      </TouchableOpacity> */}
-
-      <TouchableOpacity
-        style={{...styles.languageButton,  marginTop: 100}}
-        onPress={() => changeLanguage('en')}  >
+        style={{ ...styles.languageButton, marginTop: 100 }}
+        onPress={() => changeLanguage('en')}>
         <Text style={styles.languageButtonText}>{t("english")}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={{...styles.languageButton,  marginTop: 20}}
-        onPress={() => changeLanguage('ab')}  >
+        style={{ ...styles.languageButton, marginTop: 20 }}
+        onPress={() => changeLanguage('ab')}>
         <Text style={styles.languageButtonText}>{t("arabic")}</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
+      <View style={styles.lang}>
+        <Text style={styles.sTitle1}> {t('language')}</Text>
+        <Text style={styles.sTitle2}>{t('select')} </Text>
 
+        <FlatList
+          data={languages}
+          renderItem={({ item }) => (
+            console.log("item", item),
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedLanguage(item.value);
+              }}
+              style={selectedLanguage === item.value
+                ? styles.selectedLanguage
+                : styles.language}>
+              <Text
+                style={selectedLanguage === item.value
+                  ? styles.selectedText
+                  : styles.text}>
+                {item.label}
+              </Text>
+            </TouchableOpacity>
+          )} />
+
+        <View style={styles.btns}>
+          <TouchableOpacity
+            onPress={() => {
+              i18next.changeLanguage(selectedLanguage); // it will change the language through out the app.
+            }}
+            style={{
+              width: 150,
+              height: 48,
+              borderWidth: 0.5,
+              borderRadius: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#2352D8',
+            }}>
+            <Text
+              style={{
+                color: '#F7F9FA',
+                fontFamily: 'Manrope',
+                fontStyle: 'normal',
+              }}>
+              {t('save')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View></>
   );
 };
 
@@ -137,9 +185,85 @@ const styles = StyleSheet.create({
   languageButtonText: {
     textAlign: "center",
     fontSize: 16,
-    fontFamily: 'bold',
     color: 'white',
-  }
+  },
+  lang: {
+    width: '90%',
+    marginHorizontal: "5%",
+    backgroundColor: '#FFFFFF',
+    marginBottom:20,
+    borderWidth: 1,
+    borderColor: '#E9EDF2',
+    borderRadius: 16,
+    borderStyle: 'solid',
+  },
+  sTitle1: {
+    paddingTop: 34,
+    fontStyle: 'normal',
+    paddingLeft: 10,
+    paddingRight:10,
+    fontSize: 14,
+    color: '#A8B4BF',
+  },
+  sTitle2: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    fontStyle: 'normal',
+    paddingLeft: 10,
+    paddingRight:10,
+    fontSize: 12,
+
+    color: '#576573',
+  },
+  languageItem: {
+    height: 50,
+
+    top: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 30,
+  },
+  texts: {
+    fontFamily: 'Manrope',
+    fontStyle: 'normal',
+    color: '#576573',
+
+    fontSize: 14,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  btns: {
+    flexDirection: 'row',
+
+    width: '100%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  language: {
+    padding: 10,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  selectedLanguage: {
+    padding: 10,
+    backgroundColor: '#eee',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  text: {
+    fontSize: 14,
+    color: '#576573',
+  },
+  selectedText: {
+    fontSize: 14,
+    color: '#24A0ED',
+    fontWeight: 'bold',
+  },
 });
 
 export default Login;

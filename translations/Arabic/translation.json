@@ -4,6 +4,9 @@
     "password": "كلمة المرور",
     "loginHeading": "تسجيل الدخول",
     "movies": "أفلام",
-    "englisg": "إنجليزي",
-    "arabic": "عربي"
+    "english": "إنجليزي",
+    "arabic": "عربي",
+    "save": "يحفظ",
+    "language": "لغة",
+    "select": "يختار"
 }

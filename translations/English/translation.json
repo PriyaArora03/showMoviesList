@@ -5,5 +5,8 @@
     "loginHeading": "LOGIN",
     "movies": "Movies",
     "english": "ENGLISH",
-    "arabic": "ARABIC"
+    "arabic": "ARABIC",
+    "save": "SAVE",
+    "language": "Language",
+    "select": "Select"
 }
