@@ -17,7 +17,6 @@ const Movies: React.FC = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state: RootState) => state.api.loading);
   const data = useSelector((state: RootState) => state.api.data);
-  const error = useSelector((state: RootState) => state.api.error);
   const token = useSelector((state: RootState) => state.auth.token);
 
   const [page, setPage] = useState(1);
@@ -53,7 +52,6 @@ const Movies: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView></SafeAreaView>
       {loading ? (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#0000ff" />
