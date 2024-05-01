@@ -22,8 +22,6 @@ const AppStack = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
-  console.log('in Routes lang is*******', lang)
-
   const handleLogout = () => {
     dispatch(logout())
     navigation.navigate("Login")

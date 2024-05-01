@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { LoginScreenNavigationProp } from '../../../type';
 import { setLanguage } from '../../../store/languageSlice';
+import { token } from './../../constants'
 import i18next from 'i18next';
 
 const Login: React.FC = () => {
@@ -48,15 +49,9 @@ const Login: React.FC = () => {
       return;
     }
 
-    if (email === 'testuser@gmail.com' && password === 'password123') {
-      dispatch(loginSuccess('eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4MDZiNDYzNjFjYWM1ZGMxM2ZmZjdlOWE3ZWEyYTE1MyIsInN1YiI6IjY2MmNmZDVhYTgwNjczMDEyNWU4M2I2NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.BaQbEgvoHE8uxM5u8Ozf4ysrVJohKjcgOHOgjMBS-x0'));
+    if (validateEmail(email) && validatePassword(password)) {
+      dispatch(loginSuccess(token));
       navigation.navigate("Movies")
-    } else {
-      dispatch(loginFailure('Invalid username or password'));
-      Alert.alert(
-        'Either email or password is incorrect',
-        'Please check your email or password'
-      );
     }
   };
 
@@ -115,8 +110,6 @@ const Login: React.FC = () => {
             onPress={() => {
               i18next.changeLanguage(selectedLanguage as any)
               changeLanguage(selectedLanguage as any)
-              console.log("setting language after button press", selectedLanguage)
-              
             }}
             style={{
               width: 150,
