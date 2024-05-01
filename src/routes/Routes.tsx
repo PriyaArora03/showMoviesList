@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { Button } from 'react-native';
-import { logout } from "../../store/authSlice" 
+import { logout } from "../../store/authSlice"
 
 
 const Stack = createNativeStackNavigator<LoginStackNavigatorParamList>();
@@ -24,26 +24,30 @@ const AppStack = () => {
 
   console.log('in Routes lang is*******', lang)
 
-  const handleLogout = () => { 
-     dispatch(logout())
-     navigation.navigate("Login")
+  const handleLogout = () => {
+    dispatch(logout())
+    navigation.navigate("Login")
   }
 
   return (
     <Stack.Navigator>
       {isLoggedIn ? (
-        <Stack.Screen
+        <><Stack.Screen
           name="Movies"
           component={Movies}
           options={{
             title: t("movies"),
             headerRight: () => (
               <Button
-                title="Sign out"
-                onPress={() => handleLogout()}
-              />
+                title= {t("signout")}
+                onPress={() => handleLogout()} />
             ),
-          }} />
+          }} /><Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false
+            }} /></>
       ) : (
         <>
           <Stack.Screen

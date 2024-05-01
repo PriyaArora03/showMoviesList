@@ -96,7 +96,7 @@ const Login: React.FC = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-                setSelectedLanguage(item.value);
+                setSelectedLanguage(item.value as any);
               }}
               style={selectedLanguage === item.value
                 ? styles.selectedLanguage
@@ -113,8 +113,8 @@ const Login: React.FC = () => {
         <View style={styles.btns}>
           <TouchableOpacity
             onPress={() => {
-              i18next.changeLanguage(selectedLanguage)
-              changeLanguage(selectedLanguage)
+              i18next.changeLanguage(selectedLanguage as any)
+              changeLanguage(selectedLanguage as any)
               console.log("setting language after button press", selectedLanguage)
               
             }}
